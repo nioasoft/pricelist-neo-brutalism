@@ -41,11 +41,22 @@ export default function AdminPage() {
         }
     };
 
-    const handleLogin = () => {
-        if (password === 'admin123') {
-            setIsAuthenticated(true);
-        } else {
-            alert('סיסמה שגויה!');
+    const handleLogin = async () => {
+        // Try to authenticate by calling the API
+        try {
+            const res = await fetch('/api/services', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password, data: categories }),
+            });
+
+            if (res.ok) {
+                setIsAuthenticated(true);
+            } else {
+                alert('סיסמה שגויה!');
+            }
+        } catch (error) {
+            alert('שגיאה בהתחברות');
         }
     };
 
@@ -55,7 +66,7 @@ export default function AdminPage() {
             const res = await fetch('/api/services', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: 'admin123', data: categories }),
+                body: JSON.stringify({ password, data: categories }),
             });
 
             if (res.ok) {
