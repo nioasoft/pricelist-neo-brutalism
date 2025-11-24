@@ -133,8 +133,10 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="neo-box mx-4 md:mx-8 mb-8 bg-black text-white p-8 text-center">
-        <p className="font-bold text-lg mb-2">💬 בואו נדבר על הפרויקט שלך</p>
-        <p className="text-yellow-300 text-xl md:text-2xl font-black mt-4">⚠️ כל המחירים לא כוללים מע&quot;מ</p>
+        <p className="font-bold text-xl md:text-2xl mb-4">💬 בואו נדבר על הפרויקט שלך</p>
+        <div className="neo-box bg-yellow-400 p-4 inline-block mb-4">
+          <p className="text-black text-2xl md:text-3xl font-black">⚠️ כל המחירים לא כוללים מע&quot;מ</p>
+        </div>
         <p className="text-gray-400 text-sm mt-4">© 2024 - כל הזכויות שמורות</p>
       </footer>
     </main>
