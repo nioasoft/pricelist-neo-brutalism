@@ -1,5 +1,8 @@
 import CategorySection from '@/components/CategorySection';
 import Image from 'next/image';
+import { sql } from '@vercel/postgres';
+import fs from 'fs/promises';
+import path from 'path';
 
 interface Service {
   id: string;
@@ -15,16 +18,43 @@ interface Category {
 }
 
 async function getServices(): Promise<Category[]> {
-  // Use relative URL - works in both local and production
-  const res = await fetch('/api/services', {
-    cache: 'no-store',
-    // Add next option to ensure it works in server components
-    next: { revalidate: 0 }
-  });
-  if (!res.ok) {
-    throw new Error('Failed to fetch services');
+  // Check if we have Postgres available (production)
+  if (process.env.POSTGRES_URL) {
+    try {
+      const { rows: categories } = await sql`
+        SELECT id, name, display_order 
+        FROM categories 
+        ORDER BY display_order, id
+      `;
+
+      const { rows: services } = await sql`
+        SELECT id, category_id, name, explanation, technical, price, display_order
+        FROM services 
+        ORDER BY category_id, display_order, id
+      `;
+
+      return categories.map(cat => ({
+        category: cat.name,
+        services: services
+          .filter(s => s.category_id === cat.id)
+          .map(s => ({
+            id: s.id.toString(),
+            name: s.name,
+            explanation: s.explanation,
+            technical: s.technical,
+            price: s.price
+          }))
+      }));
+    } catch (error) {
+      console.error('Database error:', error);
+      throw new Error('Failed to fetch services from database');
+    }
+  } else {
+    // Fallback to JSON file for local development
+    const dataPath = path.join(process.cwd(), 'data', 'services.json');
+    const data = await fs.readFile(dataPath, 'utf-8');
+    return JSON.parse(data);
   }
-  return res.json();
 }
 
 export default async function Home() {
