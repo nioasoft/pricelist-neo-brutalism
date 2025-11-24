@@ -187,6 +187,17 @@ export default function AdminPage() {
                 </button>
             </div>
 
+            {/* Floating Save Button */}
+            <button
+                onClick={handleSave}
+                disabled={saving}
+                className="fixed bottom-8 left-8 z-50 neo-button bg-green-500 flex items-center gap-2 shadow-2xl scale-110 hover:scale-125 transition-transform"
+                title="שמור שינויים"
+            >
+                <Save size={24} />
+                {saving ? 'שומר...' : 'שמור'}
+            </button>
+
             {/* Categories */}
             <div className="space-y-8">
                 {categories.map((cat, catIndex) => (
