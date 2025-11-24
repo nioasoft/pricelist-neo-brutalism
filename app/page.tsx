@@ -15,12 +15,11 @@ interface Category {
 }
 
 async function getServices(): Promise<Category[]> {
-  const baseUrl = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : 'http://localhost:3000';
-
-  const res = await fetch(`${baseUrl}/api/services`, {
-    cache: 'no-store'
+  // Use relative URL - works in both local and production
+  const res = await fetch('/api/services', {
+    cache: 'no-store',
+    // Add next option to ensure it works in server components
+    next: { revalidate: 0 }
   });
   if (!res.ok) {
     throw new Error('Failed to fetch services');
