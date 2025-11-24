@@ -76,6 +76,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // If data is empty, this is just a password validation (login check)
+    // Don't modify the database
+    if (!body.data || body.data.length === 0) {
+      return NextResponse.json({ success: true, message: 'Password validated' });
+    }
+
     // If Postgres is available (production), use it
     if (hasPostgres()) {
       // Delete all existing data
