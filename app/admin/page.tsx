@@ -42,12 +42,12 @@ export default function AdminPage() {
     };
 
     const handleLogin = async () => {
-        // Try to authenticate by calling the API
+        // Validate password by sending a dummy save with empty data
         try {
             const res = await fetch('/api/services', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password, data: categories }),
+                body: JSON.stringify({ password, data: [] }),
             });
 
             if (res.ok) {
