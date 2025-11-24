@@ -15,7 +15,11 @@ interface Category {
 }
 
 async function getServices(): Promise<Category[]> {
-  const res = await fetch('http://localhost:3000/api/services', {
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000';
+
+  const res = await fetch(`${baseUrl}/api/services`, {
     cache: 'no-store'
   });
   if (!res.ok) {
