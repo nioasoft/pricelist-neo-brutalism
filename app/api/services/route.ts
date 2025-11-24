@@ -62,8 +62,16 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Check password from environment variable (fallback to hardcoded for local dev)
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    // Password MUST be set in environment variables
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminPassword) {
+      return NextResponse.json(
+        { error: 'Server configuration error: ADMIN_PASSWORD not set' },
+        { status: 500 }
+      );
+    }
+
     if (body.password !== adminPassword) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
